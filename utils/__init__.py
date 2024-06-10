@@ -1,5 +1,5 @@
-from .calculator import multiply, divide, add, subtract
+from .calculator_tool_spec import CalculatorToolSpec
 
 __all__ = (
-    multiply, divide, add, subtract
+    CalculatorToolSpec()
 )
