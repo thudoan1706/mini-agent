@@ -3,7 +3,7 @@ from llama_index.core.tools.tool_spec.base import BaseToolSpec
 
 class CalculatorToolSpec(BaseToolSpec):
     """Calculator tool spec."""
-    spec_functions = ["multiply", "divide", "add", "subtract"]
+    spec_functions = ["multiply", "divide", "add", "subtract", "factorial"]
 
     def multiply(self, a: int, b: int) -> int:
         """Multiple two integers and returns the result integer"""
@@ -24,3 +24,9 @@ class CalculatorToolSpec(BaseToolSpec):
     def exponential(self, a: int, b: int) -> int:
         """Calculate a raised to the power of b and return the result"""
         return a ** b
+
+    def factorial(self, n: int) -> int:
+        """Compute the factorial of given integer and returns the result integer"""
+        if (n == 0):
+            return 1
+        return n * self.factorial(n - 1)

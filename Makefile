@@ -1,2 +1,3 @@
 clean:
-	rm -rf **/__pycache__ .pytest_cache .dist
+	rm -rf **/__pycache__ **/**/__pycache__ 
+	rm -rf .pytest_cache .dist

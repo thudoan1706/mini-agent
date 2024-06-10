@@ -79,3 +79,24 @@ def test_divide(a, b, expected):
     """
     actual = tool_spec.divide(a, b)
     assert expected == actual
+
+
+@pytest.mark.parametrize(
+    "n, expected",
+    [
+        (0, 1),     # 0! = 1
+        (1, 1),     # 1! = 1
+        (2, 2),     # 2! = 2
+        (3, 6),     # 3! = 6
+        (4, 24),    # 4! = 24
+        (5, 120),   # 5! = 120
+        (6, 720),   # 6! = 720
+    ],
+)
+def test_factorial(n, expected):
+    """
+    :param n: The number to compute the factorial of
+    :param expected: Expected result of n!
+    """
+    actual = tool_spec.factorial(n)
+    assert expected == actual
