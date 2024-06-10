@@ -1,5 +1,7 @@
-from utils import add, subtract, multiply, divide
+from utils.calculator_tool_spec import CalculatorToolSpec
 import pytest
+
+tool_spec = CalculatorToolSpec()
 
 
 @pytest.mark.parametrize(
@@ -17,7 +19,7 @@ def test_add(a, b, expected):
     :param b: Second integer
     :param expected: Expected result of adding a and b
     """
-    actual = add(a, b)
+    actual = tool_spec.add(a, b)
     assert expected == actual
 
 
@@ -36,7 +38,7 @@ def test_subtract(a, b, expected):
     :param b: Second integer
     :param expected: Expected result of subtracting b from a
     """
-    actual = subtract(a, b)
+    actual = tool_spec.subtract(a, b)
     assert expected == actual
 
 
@@ -55,7 +57,7 @@ def test_multiply(a, b, expected):
     :param b: Second integer
     :param expected: Expected result of multiplying a and b
     """
-    actual = multiply(a, b)
+    actual = tool_spec.multiply(a, b)
     assert expected == actual
 
 
@@ -75,5 +77,5 @@ def test_divide(a, b, expected):
     :param b: Second integer
     :param expected: Expected result of dividing a by b
     """
-    actual = divide(a, b)
+    actual = tool_spec.divide(a, b)
     assert expected == actual
