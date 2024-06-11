@@ -1,36 +1,29 @@
-from llama_index.vector_stores.pinecone import PineconeVectorStore
 import os
-from typing import List
-from utils.calculator_tool_spec import CalculatorToolSpec
-from llama_index.llms.openai import OpenAI
-from llama_index.vector_stores.pinecone import PineconeVectorStore
-from llama_index.agent.openai import OpenAIAgent
 from pinecone import Pinecone, ServerlessSpec
+from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.core.objects import ObjectIndex
 from llama_index.core import StorageContext
 from llama_index.core.objects import SimpleToolNodeMapping
-
 from llama_index.core import VectorStoreIndex
-
-PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY", "")
-
+from typing import Optional, Any
+# Initialize Pinecone API key and client
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY", "")
 PINECONE_CLIENT = Pinecone(PINECONE_API_KEY)
 
 
 class PineconeClient:
     """
-    Upload indices of tools and documents into Pinecone
+    Manages indices of tools and documents in Pinecone.
     """
 
-    def __init__(self, collection_name, tool_lists):
+    def __init__(self, collection_name):
         """
         Initialize the PineconeClient.
 
         :param collection_name: Name of the Pinecone collection.
-        :param tool_lists: List of tools to be indexed.
         """
         self.collection_name = collection_name
-        self.tool_lists = tool_lists
+        self._initialize_index()
 
         self.vector_store = PineconeVectorStore(
             pinecone_index=PINECONE_CLIENT.Index(collection_name))
@@ -39,27 +32,26 @@ class PineconeClient:
         self.index = VectorStoreIndex.from_vector_store(
             vector_store=self.vector_store)
 
-    def load_func_tools_indices(self):
-        """
-        Load function tools indices from the existing index.
+    def _initialize_index(self):
+        """Create the index if it does not exist."""
+        if self.collection_name not in [i.get('name') for i in PINECONE_CLIENT.list_indexes()]:
+            PINECONE_CLIENT.create_index(
+                name=self.collection_name,
+                dimension=1536,
+                metric='cosine',
+                spec=ServerlessSpec(cloud='aws', region='us-west-2')
+            )
 
-        :return: ObjectIndex created from tool_lists and the index.
-        """
-        object_index = ObjectIndex.from_objects_and_index(
-            self.tool_lists, self.index)
-        return object_index
+    def load_indices(self, objects: Optional[Any]):
+        """Load function tools indices from the existing index."""
+        return ObjectIndex.from_objects_and_index(objects, self.index)
 
-    def create_func_tools_indices(self):
-        """
-        Create vector index and upload onto Pinecone.
-
-        :return: ObjectIndex created from tool_lists, mapping, and storage context.
-        """
-        object_mapping = SimpleToolNodeMapping.from_objects(self.tool_lists)
-        object_index = ObjectIndex.from_objects(
-            self.tool_lists,
+    def upsert_indices(self, objects):
+        """Upsert vector index and upload onto Pinecone."""
+        object_mapping = SimpleToolNodeMapping.from_objects(objects)
+        return ObjectIndex.from_objects(
+            objects,
             object_mapping=object_mapping,
             index_cls=VectorStoreIndex,
             storage_context=self.storage_context,
         )
-        return object_index
