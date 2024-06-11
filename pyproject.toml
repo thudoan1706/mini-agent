@@ -6,11 +6,14 @@ authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
-llama-index = "^0.10.43"
-llama-index-core = "0.10.43"
+python = ">=3.9,<3.13"
+pinecone-client = ">=3.0.2,<4.0.0"
+llama-index-vector-stores-pinecone = "^0.1.7"
+llama-index-core = ">=0.10.1,<0.11.0"
 llama-index-llms-openai = "^0.1.22"
 llama-index-embeddings-openai = "^0.1.10"
+llama-index-agent-openai-legacy = "^0.1.6"
+llama-index-agent-openai = "^0.2.7"
 
 
 [tool.poetry.group.dev.dependencies]
