@@ -6,6 +6,8 @@ from llama_index.core import StorageContext
 from llama_index.core.objects import SimpleToolNodeMapping
 from llama_index.core import VectorStoreIndex
 from typing import Optional, Any
+from llama_index.core.schema import TextNode
+
 # Initialize Pinecone API key and client
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY", "")
 PINECONE_CLIENT = Pinecone(PINECONE_API_KEY)
@@ -39,7 +41,7 @@ class PineconeClient:
                 name=self.collection_name,
                 dimension=1536,
                 metric='cosine',
-                spec=ServerlessSpec(cloud='aws', region='us-west-2')
+                spec=ServerlessSpec(cloud='aws', region='us-east-1')
             )
 
     def load_indices(self, objects: Optional[Any]):
